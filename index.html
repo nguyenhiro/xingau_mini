@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Xí Ngầu Tài Xỉu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Định nghĩa biến CSS */
+        :root {
+            --primary-text-color: #fff;
+            --accent-color: #ffeb3b; /* Yellow for timer/results */
+            --button-green: #4CAF50;
+            --button-blue: #2196F3;
+            --button-orange: #FF5722;
+            --button-selected: #FFC107;
+            --button-text-selected: #333;
+            --win-color: #00FF00;
+            --lose-color: #FF0000;
+            --info-color: #FFD700;
+            --dark-background-light: rgba(255, 255, 255, 0.15);
+            --dark-background-dark: rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Căn giữa toàn bộ nội dung theo chiều dọc */
+            min-height: 100vh;
+            
+            /* --- BẮT ĐẦU: ĐÂY LÀ NƠI BẠN DÁN URL BANNER CỦA BẠN --- */
+            /* Sử dụng một ảnh casino đẹp làm nền */
+            background: url('https://images.unsplash.com/photo-1522069213448-443a614da9b6?q=80&w=2073&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center / cover;
+            /* Ví dụ với ảnh cục bộ (nếu bạn tải về máy và đặt cùng thư mục): */
+            /* background: url('your_local_casino_banner.jpg') no-repeat center center / cover; */
+            /* --- KẾT THÚC: NƠI DÁN URL BANNER --- */
+
+            color: var(--primary-text-color);
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-x: hidden;
+            position: relative; /* Quan trọng cho lớp phủ */
+        }
+        
+        /* Lớp phủ để làm mờ hình nền và giúp chữ dễ đọc */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.65); /* Lớp phủ đen trong suốt */
+            z-index: -1; /* Đảm bảo lớp phủ nằm dưới nội dung chính */
+        }
+
+        /* Xóa phần .casino-banner vì chúng ta dùng ảnh nền cho body */
+        /* .casino-banner { display: none; } */ 
+
+        .container {
+            background-color: var(--dark-background-light); 
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+            backdrop-filter: blur(5px); /* Hiệu ứng mờ nền */
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px; /* Khoảng cách với lịch sử nếu có */
+        }
+
+        h1 {
+            font-family: 'Press Start 2P', cursive;
+            margin-bottom: 25px;
+            font-size: 2.2em;
+            text-shadow: 3px 3px 8px rgba(0,0,0,0.4);
+            color: var(--accent-color);
+            letter-spacing: 2px;
+        }
+
+        #walletInfo {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap; 
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            background-color: var(--dark-background-light);
+            padding: 10px;
+            border-radius: 8px;
+            color: var(--accent-color);
+            gap: 10px; 
+        }
+        #walletInfo div {
+            padding: 0 5px;
+        }
+
+        .deposit-section, .bet-input-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: var(--dark-background-dark); 
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .deposit-section label, .bet-input-section label {
+            font-weight: bold;
+        }
+        .deposit-section button {
+            padding: 10px 18px;
+            font-size: 1em;
+            background-color: var(--button-green);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        .deposit-section button:hover {
+            background-color: #388e3c;
+            transform: scale(1.03);
+        }
+        .deposit-section button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .bet-input-section input {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background-color: rgba(0, 0, 0, 0.3);
+            color: var(--primary-text-color);
+            font-size: 1em;
+            width: 100px;
+            text-align: center;
+        }
+        .bet-input-section input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 5px var(--accent-color);
+        }
+        
+        #timerDisplay {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+
+        .bet-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .bet-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .bet-button {
+            padding: 15px 20px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background-color: var(--button-green);
+            color: var(--primary-text-color);
+            transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+            flex: 1; 
+            min-width: 120px; 
+            max-width: 160px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        .bet-button.selected {
+            background-color: var(--button-selected);
+            color: var(--button-text-selected);
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        .bet-button:not(.selected):hover {
+            transform: scale(1.03);
+            background-color: #388e3c;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25);
+        }
+
+        .bet-button[data-bet-type="tai"],
+        .bet-button[data-bet-type="xiu"] {
+            flex-basis: 45%; 
+            max-width: 200px;
+        }
+
+        .single-number-bets .bet-button {
+            background-color: var(--button-blue);
+            flex-basis: 15%; 
+            min-width: 60px;
+            max-width: 80px;
+        }
+        .single-number-bets .bet-button:not(.selected):hover {
+            background-color: #1976D2;
+        }
+
+        #diceResult {
+            font-size: 4em;
+            font-weight: bold;
+            margin: 30px 0;
+            min-height: 100px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+            text-shadow: 3px 3px 8px rgba(0,0,0,0.4);
+        }
+
+        .dice-face {
+            width: 90px;
+            height: 90px;
+            background-color: #eee;
+            border: 6px solid #333;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5em;
+            color: #333;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            transition: transform 0.3s ease-out;
+        }
+        @keyframes diceSpin {
+            0% { transform: rotate(0deg) scale(0.8); opacity: 0.5; }
+            50% { transform: rotate(180deg) scale(1.1); opacity: 1; }
+            100% { transform: rotate(360deg) scale(0.8); opacity: 0.5; }
+        }
+        .spinning {
+            animation: diceSpin 0.5s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        #message {
+            font-size: 1.4em;
+            margin-top: 20px;
+            font-weight: bold;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+
+        #playAgainBtn {
+            padding: 12px 25px;
+            font-size: 1.2em;
+            background-color: var(--button-orange);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: background-color 0.2s, transform 0.2s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        #playAgainBtn:hover {
+            background-color: #e64a19;
+            transform: scale(1.05);
+        }
+        #playAgainBtn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* Lịch sử đặt cược */
+        #historySection {
+            margin-top: 20px; /* Đảm bảo khoảng cách với container chính */
+            background-color: var(--dark-background-dark);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: left;
+            max-height: 300px; 
+            overflow-y: auto; 
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 800px; /* Cùng độ rộng với container chính */
+            width: 100%;
+        }
+        #historySection h2 {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.5em;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        #betHistory {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        #betHistory li {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            font-size: 0.95em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        #betHistory li span {
+            margin-right: 10px;
+        }
+        #betHistory li .bet-detail {
+            font-weight: bold;
+            color: #FFD700;
+        }
+        #betHistory li .result-detail {
+            color: var(--primary-text-color);
+        }
+        #betHistory li .win-loss {
+            font-weight: bold;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        #betHistory li .win {
+            color: var(--win-color);
+        }
+        #betHistory li .lose {
+            color: var(--lose-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎲 Game Xí Ngầu Tài Xỉu 🎲</h1>
+        
+        <div id="walletInfo">
+            <div>Xu của bạn: <span id="currentBalance">1000</span></div>
+            <div>Tổng cược hệ thống: <span id="systemBalance">1,000,000</span></div>
+        </div>
+        
+        <div class="deposit-section">
+            <label>Nạp 1000 xu:</label>
+            <button id="depositBtn">Nhận Xu</button>
+        </div>
+
+        <div class="bet-input-section">
+            <label for="betAmount">Đặt cược:</label>
+            <input type="number" id="betAmount" value="100" min="1">
+        </div>
+
+        <div id="timerDisplay">Thời gian đặt cược: 10s</div>
+        
+        <div class="bet-options">
+            <div class="bet-group">
+                <button class="bet-button" data-bet-type="tai" data-numbers="4,5,6">Tài (4-5-6)</button>
+                <button class="bet-button" data-bet-type="xiu" data-numbers="1,2,3">Xỉu (1-2-3)</button>
+            </div>
+            <div class="single-number-bets bet-group">
+                <button class="bet-button" data-bet-type="number" data-numbers="1">1</button>
+                <button class="bet-button" data-bet-type="number" data-numbers="2">2</button>
+                <button class="bet-button" data-bet-type="number" data-numbers="3">3</button>
+                <button class="bet-button" data-bet-type="number" data-numbers="4">4</button>
+                <button class="bet-button" data-bet-type="number" data-numbers="5">5</button>
+                <button class="bet-button" data-bet-type="number" data-numbers="6">6</button>
+            </div>
+        </div>
+
+        <div id="diceResult">Hãy đặt cược!</div>
+        <div id="message"></div>
+        <button id="playAgainBtn" style="display: none;">Chơi Lại</button>
+    </div>
+
+    <div id="historySection" class="container">
+        <h2>Lịch Sử Đặt Cược</h2>
+        <ul id="betHistory">
+            </ul>
+    </div>
+
+    <script>
+        const timerDisplay = document.getElementById('timerDisplay');
+        const diceResultDisplay = document.getElementById('diceResult');
+        const messageDisplay = document.getElementById('message');
+        const playAgainBtn = document.getElementById('playAgainBtn');
+        const betButtons = document.querySelectorAll('.bet-button');
+        
+        const currentBalanceDisplay = document.getElementById('currentBalance');
+        const systemBalanceDisplay = document.getElementById('systemBalance');
+        const depositBtn = document.getElementById('depositBtn');
+        const betAmountInput = document.getElementById('betAmount');
+        const betHistoryList = document.getElementById('betHistory');
+
+        // Lấy các giá trị màu từ CSS để dùng trong JS
+        const winColor = getComputedStyle(document.documentElement).getPropertyValue('--win-color');
+        const loseColor = getComputedStyle(document.documentElement).getPropertyValue('--lose-color');
+        const infoColor = getComputedStyle(document.documentElement).getPropertyValue('--info-color');
+
+        let currentBalance = 1000; 
+        let systemBalance = 1000000; 
+        let timeLeft = 10;
+        let timerInterval;
+        let selectedBet = null; 
+        let selectedNumbers = []; 
+        let currentBetAmount = 0; 
+
+        // Cập nhật hiển thị số xu trong ví
+        function updateWalletDisplay() {
+            currentBalanceDisplay.textContent = currentBalance.toLocaleString();
+            systemBalanceDisplay.textContent = systemBalance.toLocaleString();
+        }
+
+        // Xử lý nạp 1000 xu mỗi lần nhấn
+        depositBtn.addEventListener('click', () => {
+            currentBalance += 1000;
+            updateWalletDisplay();
+            messageDisplay.textContent = `Bạn đã nhận 1000 xu! Tổng xu: ${currentBalance.toLocaleString()}`;
+            messageDisplay.style.color = infoColor;
+        });
+
+        // Hàm khởi tạo hoặc chơi lại game
+        function initializeGame() {
+            clearInterval(timerInterval); 
+            timeLeft = 10;
+            selectedBet = null;
+            selectedNumbers = [];
+            currentBetAmount = 0; 
+            messageDisplay.textContent = '';
+            diceResultDisplay.innerHTML = 'Hãy đặt cược!';
+            playAgainBtn.style.display = 'none'; 
+            playAgainBtn.disabled = true;
+
+            betButtons.forEach(button => {
+                button.classList.remove('selected');
+                button.disabled = false; 
+            });
+            depositBtn.disabled = false; 
+            betAmountInput.disabled = false; 
+
+            updateWalletDisplay(); 
+            startBettingPhase();
+        }
+
+        // Bắt đầu giai đoạn đặt cược
+        function startBettingPhase() {
+            timerDisplay.textContent = `Thời gian đặt cược: ${timeLeft}s`;
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = `Thời gian đặt cược: ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endBettingPhase();
+                }
+            }, 1000);
+        }
+
+        // Kết thúc giai đoạn đặt cược và chuẩn bị đổ xí ngầu
+        function endBettingPhase() {
+            betButtons.forEach(button => { button.disabled = true; });
+            depositBtn.disabled = true;
+            betAmountInput.disabled = true;
+
+            currentBetAmount = parseInt(betAmountInput.value);
+
+            if (selectedBet === null) {
+                messageDisplay.textContent = 'Bạn chưa chọn cửa đặt cược! Không có cược nào được thực hiện.';
+                messageDisplay.style.color = infoColor;
+                playAgainBtn.style.display = 'block';
+                playAgainBtn.disabled = false;
+                return;
+            }
+
+            if (isNaN(currentBetAmount) || currentBetAmount <= 0) {
+                messageDisplay.textContent = `Vui lòng nhập số xu muốn đặt cược hợp lệ (lớn hơn 0).`;
+                messageDisplay.style.color = infoColor;
+                playAgainBtn.style.display = 'block';
+                playAgainBtn.disabled = false;
+                return;
+            }
+            
+            if (currentBetAmount > currentBalance) {
+                messageDisplay.textContent = `Bạn không đủ xu để đặt ${currentBetAmount.toLocaleString()} xu! Số xu hiện có: ${currentBalance.toLocaleString()}.`;
+                messageDisplay.style.color = loseColor;
+                playAgainBtn.style.display = 'block';
+                playAgainBtn.disabled = false;
+                return;
+            }
+            
+            currentBalance -= currentBetAmount;
+            updateWalletDisplay();
+            messageDisplay.textContent = `Đã đặt ${currentBetAmount.toLocaleString()} xu. Chờ kết quả...`;
+            messageDisplay.style.color = infoColor;
+
+            rollDice();
+        }
+
+        // Xử lý khi người chơi chọn cược
+        function selectBet(event) {
+            if (timeLeft <= 0 || currentBalance <= 0) {
+                messageDisplay.textContent = `Hãy Nạp Xu hoặc chờ vòng mới để đặt cược!`;
+                messageDisplay.style.color = infoColor;
+                return;
+            }
+
+            betButtons.forEach(button => {
+                button.classList.remove('selected');
+            });
+
+            const clickedButton = event.target;
+            clickedButton.classList.add('selected');
+
+            selectedBet = clickedButton.dataset.betType;
+            selectedNumbers = clickedButton.dataset.numbers.split(',').map(Number); 
+            
+            messageDisplay.textContent = `Bạn đã chọn: ${clickedButton.textContent}. Hãy nhập số xu và chờ thời gian đếm ngược.`;
+            messageDisplay.style.color = infoColor;
+        }
+
+        // Quay và hiển thị kết quả xí ngầu
+        function rollDice() {
+            timerDisplay.textContent = 'Kết quả xí ngầu:';
+            diceResultDisplay.innerHTML = '<div class="dice-face spinning"></div>'; 
+
+            setTimeout(() => {
+                const result = Math.floor(Math.random() * 6) + 1; 
+                diceResultDisplay.innerHTML = `<div class="dice-face">${result}</div>`; 
+
+                checkResult(result);
+                playAgainBtn.style.display = 'block';
+                playAgainBtn.disabled = false;
+            }, 3000); 
+        }
+
+        // Kiểm tra kết quả và thông báo thắng/thua
+        function checkResult(diceResult) {
+            let isWinner = false;
+            let currentBetText = 'chưa đặt cược'; 
+            let winnings = 0; // Số xu người chơi nhận được (gốc + lãi)
+            let systemProfit = 0; // Số xu hệ thống lãi/lỗ từ lượt này
+
+            const selectedButtonElement = Array.from(betButtons).find(btn => btn.classList.contains('selected'));
+            if (selectedButtonElement) {
+                currentBetText = selectedButtonElement.textContent;
+            }
+
+            if (currentBetAmount === 0 || selectedBet === null) {
+                return; 
+            }
+
+            let winMultiplier = 0; 
+
+            if (selectedBet === 'tai' && diceResult >= 4 && diceResult <= 6) {
+                isWinner = true;
+                winMultiplier = 2; // Ăn 100% (gấp đôi số đặt)
+            } else if (selectedBet === 'xiu' && diceResult >= 1 && diceResult <= 3) {
+                isWinner = true;
+                winMultiplier = 2; // Ăn 100% (gấp đôi số đặt)
+            } else if (selectedBet === 'number' && selectedNumbers.includes(diceResult)) {
+                isWinner = true;
+                winMultiplier = 5; // Ăn 500% (gấp 5 lần số đặt)
+            }
+
+            if (isWinner) {
+                winnings = currentBetAmount * winMultiplier;
+                currentBalance += winnings; 
+                systemProfit = currentBetAmount - winnings; // Nếu người chơi thắng, hệ thống bị lỗ (số âm)
+                
+                messageDisplay.textContent = `🎉 Bạn đã chiến thắng ${winnings.toLocaleString()} xu! Tổng xu: ${currentBalance.toLocaleString()}. Kết quả: ${diceResult}.`;
+                messageDisplay.style.color = winColor;
+                addHistoryEntry(currentBetText, currentBetAmount, diceResult, 'Thắng', winnings);
+            } else {
+                systemProfit = currentBetAmount; // Nếu người chơi thua, hệ thống lãi số tiền người chơi đặt
+                
+                messageDisplay.textContent = `😢 Bạn đã thua ${currentBetAmount.toLocaleString()} xu. Kết quả: ${diceResult}. Bạn đã đặt cược vào: ${currentBetText}. Số xu còn lại: ${currentBalance.toLocaleString()}.`;
+                messageDisplay.style.color = loseColor;
+                addHistoryEntry(currentBetText, currentBetAmount, diceResult, 'Thua', -currentBetAmount); 
+            }
+            
+            systemBalance += systemProfit; // Cộng/trừ tiền lãi/lỗ của hệ thống
+            updateWalletDisplay(); 
+            currentBetAmount = 0; 
+            betAmountInput.value = 100; 
+        }
+
+        // Hàm thêm lịch sử đặt cược
+        function addHistoryEntry(betType, betAmount, diceResult, status, balanceChange) {
+            const listItem = document.createElement('li');
+            let changeText = '';
+            let changeClass = '';
+
+            if (status === 'Thắng') {
+                changeText = `+${balanceChange.toLocaleString()} xu`;
+                changeClass = 'win';
+            } else {
+                changeText = `${balanceChange.toLocaleString()} xu`; // đã là số âm
+                changeClass = 'lose';
+            }
+
+            listItem.innerHTML = `
+                <span class="bet-detail">Cược: ${betType} (${betAmount.toLocaleString()} xu)</span>
+                <span class="result-detail">KQ: ${diceResult}</span>
+                <span class="win-loss ${changeClass}">${status} (${changeText})</span>
+            `;
+            betHistoryList.prepend(listItem); 
+            if (betHistoryList.children.length > 10) { 
+                betHistoryList.removeChild(betHistoryList.lastChild);
+            }
+        }
+
+        betButtons.forEach(button => {
+            button.addEventListener('click', selectBet);
+        });
+
+        playAgainBtn.addEventListener('click', initializeGame);
+
+        initializeGame();
+    </script>
+</body>
+</html>

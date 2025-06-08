@@ -20,6 +20,14 @@
             --info-color: #FFD700;
             --dark-background-light: rgba(255, 255, 255, 0.15);
             --dark-background-dark: rgba(0, 0, 0, 0.3);
+            
+            /* Thêm biến cho kích thước font cơ sở để dễ điều chỉnh responsive */
+            --base-font-size: 16px;
+        }
+
+        /* HTML & Body: Đảm bảo kích thước toàn màn hình và font cơ sở */
+        html {
+            font-size: var(--base-font-size); /* Đặt font cơ sở cho REM */
         }
 
         body {
@@ -27,24 +35,16 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* Căn giữa toàn bộ nội dung theo chiều dọc */
+            justify-content: center;
             min-height: 100vh;
-            
-            /* --- BẮT ĐẦU: ĐÂY LÀ NƠI BẠN DÁN URL BANNER CỦA BẠN --- */
-            /* Sử dụng một ảnh casino đẹp làm nền */
             background: url('https://images.unsplash.com/photo-1522069213448-443a614da9b6?q=80&w=2073&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center / cover;
-            /* Ví dụ với ảnh cục bộ (nếu bạn tải về máy và đặt cùng thư mục): */
-            /* background: url('your_local_casino_banner.jpg') no-repeat center center / cover; */
-            /* --- KẾT THÚC: NƠI DÁN URL BANNER --- */
-
             color: var(--primary-text-color);
-            padding: 20px;
+            padding: 1rem; /* Sử dụng REM cho padding */
             box-sizing: border-box;
             overflow-x: hidden;
-            position: relative; /* Quan trọng cho lớp phủ */
+            position: relative;
         }
         
-        /* Lớp phủ để làm mờ hình nền và giúp chữ dễ đọc */
         body::before {
             content: '';
             position: absolute;
@@ -52,69 +52,69 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.65); /* Lớp phủ đen trong suốt */
-            z-index: -1; /* Đảm bảo lớp phủ nằm dưới nội dung chính */
+            background-color: rgba(0, 0, 0, 0.65);
+            z-index: -1;
         }
 
-        /* Xóa phần .casino-banner vì chúng ta dùng ảnh nền cho body */
-        /* .casino-banner { display: none; } */ 
-
+        /* Container chính */
         .container {
             background-color: var(--dark-background-light); 
-            padding: 30px;
+            padding: 1.5rem; /* Sử dụng REM */
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             text-align: center;
             max-width: 800px;
-            width: 100%;
-            backdrop-filter: blur(5px); /* Hiệu ứng mờ nền */
+            width: 100%; /* Đảm bảo nó chiếm đủ chiều rộng có sẵn */
+            backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            margin-bottom: 20px; /* Khoảng cách với lịch sử nếu có */
+            margin-bottom: 1.25rem; /* Sử dụng REM */
         }
 
         h1 {
             font-family: 'Press Start 2P', cursive;
-            margin-bottom: 25px;
-            font-size: 2.2em;
+            margin-bottom: 1.5rem; /* Sử dụng REM */
+            font-size: 2.2rem; /* Sử dụng REM */
             text-shadow: 3px 3px 8px rgba(0,0,0,0.4);
             color: var(--accent-color);
             letter-spacing: 2px;
+            line-height: 1.2; /* Tăng line-height cho tiêu đề lớn */
         }
 
         #walletInfo {
             display: flex;
             justify-content: space-around;
             flex-wrap: wrap; 
-            margin-bottom: 15px;
-            font-size: 1.2em;
+            margin-bottom: 1rem; /* Sử dụng REM */
+            font-size: 1.1rem; /* Sử dụng REM */
             font-weight: bold;
             background-color: var(--dark-background-light);
-            padding: 10px;
+            padding: 0.75rem; /* Sử dụng REM */
             border-radius: 8px;
             color: var(--accent-color);
-            gap: 10px; 
+            gap: 0.5rem; /* Sử dụng REM */
         }
         #walletInfo div {
-            padding: 0 5px;
+            padding: 0 0.3rem; /* Sử dụng REM */
         }
 
         .deposit-section, .bet-input-section {
-            margin-bottom: 25px;
-            padding: 15px;
+            margin-bottom: 1.5rem; /* Sử dụng REM */
+            padding: 1rem; /* Sử dụng REM */
             background-color: var(--dark-background-dark); 
             border-radius: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 10px;
+            gap: 0.6rem; /* Sử dụng REM */
             flex-wrap: wrap;
         }
         .deposit-section label, .bet-input-section label {
             font-weight: bold;
+            font-size: 1rem; /* Đảm bảo font size nhất quán */
         }
         .deposit-section button {
-            padding: 10px 18px;
-            font-size: 1em;
+            padding: 0.6rem 1rem; /* Sử dụng REM */
+            font-size: 1rem; /* Sử dụng REM */
             background-color: var(--button-green);
             color: white;
             border: none;
@@ -133,13 +133,14 @@
         }
 
         .bet-input-section input {
-            padding: 10px;
+            padding: 0.6rem; /* Sử dụng REM */
             border-radius: 5px;
             border: 1px solid rgba(255, 255, 255, 0.3);
             background-color: rgba(0, 0, 0, 0.3);
             color: var(--primary-text-color);
-            font-size: 1em;
-            width: 100px;
+            font-size: 1rem; /* Sử dụng REM */
+            width: 80px; /* Chiều rộng tương đối */
+            max-width: 120px; /* Giới hạn chiều rộng tối đa */
             text-align: center;
         }
         .bet-input-section input:focus {
@@ -149,28 +150,28 @@
         }
         
         #timerDisplay {
-            font-size: 1.8em;
-            margin-bottom: 20px;
+            font-size: 1.5rem; /* Sử dụng REM */
+            margin-bottom: 1.25rem; /* Sử dụng REM */
             color: var(--accent-color);
         }
 
         .bet-options {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            margin-bottom: 30px;
+            gap: 1rem; /* Sử dụng REM */
+            margin-bottom: 1.75rem; /* Sử dụng REM */
         }
 
         .bet-group {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 0.75rem; /* Sử dụng REM */
             flex-wrap: wrap;
         }
 
         .bet-button {
-            padding: 15px 20px;
-            font-size: 1.1em;
+            padding: 1rem 1.2rem; /* Sử dụng REM */
+            font-size: 1.05rem; /* Sử dụng REM */
             font-weight: bold;
             border: none;
             border-radius: 10px;
@@ -178,9 +179,9 @@
             background-color: var(--button-green);
             color: var(--primary-text-color);
             transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
-            flex: 1; 
-            min-width: 120px; 
-            max-width: 160px; 
+            flex: 1; /* Cho phép các nút co giãn */
+            min-width: 110px; /* Giảm min-width cho màn hình nhỏ hơn */
+            max-width: 150px; /* Giới hạn max-width */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             text-align: center;
         }
@@ -198,25 +199,25 @@
 
         .bet-button[data-bet-type="tai"],
         .bet-button[data-bet-type="xiu"] {
-            flex-basis: 45%; 
+            flex-basis: 48%; /* Cho phép chiếm gần một nửa */
             max-width: 200px;
         }
 
         .single-number-bets .bet-button {
             background-color: var(--button-blue);
-            flex-basis: 15%; 
-            min-width: 60px;
-            max-width: 80px;
+            flex-basis: 15%; /* Giữ nguyên nhưng đảm bảo min-width đủ lớn */
+            min-width: 50px; /* Giảm min-width cho điện thoại */
+            max-width: 70px; /* Giới hạn max-width */
         }
         .single-number-bets .bet-button:not(.selected):hover {
             background-color: #1976D2;
         }
 
         #diceResult {
-            font-size: 4em;
+            font-size: 3.5rem; /* Sử dụng REM */
             font-weight: bold;
-            margin: 30px 0;
-            min-height: 100px; 
+            margin: 1.5rem 0; /* Sử dụng REM */
+            min-height: 90px; /* Giảm min-height */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -225,17 +226,17 @@
         }
 
         .dice-face {
-            width: 90px;
-            height: 90px;
+            width: 80px; /* Giảm kích thước xí ngầu */
+            height: 80px; /* Giảm kích thước xí ngầu */
             background-color: #eee;
-            border: 6px solid #333;
-            border-radius: 18px;
+            border: 5px solid #333; /* Giảm độ dày viền */
+            border-radius: 15px; /* Giảm border-radius */
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3.5em;
+            font-size: 3rem; /* Giảm font size của số trên xí ngầu */
             color: #333;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4); /* Giảm box-shadow */
             transition: transform 0.3s ease-out;
         }
         @keyframes diceSpin {
@@ -248,21 +249,21 @@
         }
 
         #message {
-            font-size: 1.4em;
-            margin-top: 20px;
+            font-size: 1.1rem; /* Sử dụng REM */
+            margin-top: 1rem; /* Sử dụng REM */
             font-weight: bold;
             text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
         }
 
         #playAgainBtn {
-            padding: 12px 25px;
-            font-size: 1.2em;
+            padding: 0.8rem 1.5rem; /* Sử dụng REM */
+            font-size: 1.1rem; /* Sử dụng REM */
             background-color: var(--button-orange);
             color: white;
             border: none;
             border-radius: 10px;
             cursor: pointer;
-            margin-top: 30px;
+            margin-top: 1.5rem; /* Sử dụng REM */
             transition: background-color 0.2s, transform 0.2s;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
@@ -278,23 +279,23 @@
 
         /* Lịch sử đặt cược */
         #historySection {
-            margin-top: 20px; /* Đảm bảo khoảng cách với container chính */
+            margin-top: 1.25rem; /* Sử dụng REM */
             background-color: var(--dark-background-dark);
-            padding: 20px;
+            padding: 1.25rem; /* Sử dụng REM */
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             text-align: left;
-            max-height: 300px; 
+            max-height: 250px; /* Giảm max-height */
             overflow-y: auto; 
             border: 1px solid rgba(255, 255, 255, 0.1);
-            max-width: 800px; /* Cùng độ rộng với container chính */
+            max-width: 800px;
             width: 100%;
         }
         #historySection h2 {
             font-family: 'Press Start 2P', cursive;
-            font-size: 1.5em;
+            font-size: 1.2rem; /* Sử dụng REM */
             color: var(--accent-color);
-            margin-bottom: 15px;
+            margin-bottom: 1rem; /* Sử dụng REM */
             text-align: center;
         }
         #betHistory {
@@ -304,17 +305,19 @@
         }
         #betHistory li {
             background-color: rgba(0, 0, 0, 0.2);
-            padding: 10px;
-            margin-bottom: 8px;
+            padding: 0.75rem; /* Sử dụng REM */
+            margin-bottom: 0.5rem; /* Sử dụng REM */
             border-radius: 5px;
-            font-size: 0.95em;
+            font-size: 0.9rem; /* Sử dụng REM */
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
+            flex-wrap: wrap; /* Cho phép wrap trên màn hình nhỏ */
+            gap: 0.5rem; /* Khoảng cách giữa các phần tử trong li */
         }
         #betHistory li span {
-            margin-right: 10px;
+            /* Loại bỏ margin-right cố định để flexbox tự quản lý */
+            margin-right: 0; 
         }
         #betHistory li .bet-detail {
             font-weight: bold;
@@ -325,14 +328,200 @@
         }
         #betHistory li .win-loss {
             font-weight: bold;
-            padding: 2px 5px;
+            padding: 0.15rem 0.3rem; /* Sử dụng REM */
             border-radius: 3px;
+            white-space: nowrap; /* Giữ nguyên dòng cho trạng thái thắng/thua */
         }
         #betHistory li .win {
             color: var(--win-color);
         }
         #betHistory li .lose {
             color: var(--lose-color);
+        }
+
+        /* ======================================= */
+        /* MEDIA QUERIES cho các kích thước màn hình */
+        /* ======================================= */
+
+        /* Cho màn hình nhỏ hơn 768px (điện thoại, máy tính bảng dọc) */
+        @media (max-width: 768px) {
+            :root {
+                --base-font-size: 14px; /* Giảm font cơ sở */
+            }
+
+            h1 {
+                font-size: 1.8rem; /* Giảm kích thước tiêu đề */
+                margin-bottom: 1.2rem;
+            }
+
+            .container {
+                padding: 1rem; /* Giảm padding tổng thể */
+                margin-bottom: 1rem;
+            }
+
+            #walletInfo {
+                flex-direction: column; /* Xếp thông tin ví theo cột */
+                align-items: center;
+                gap: 0.3rem; /* Giảm khoảng cách */
+                font-size: 1rem;
+            }
+
+            .deposit-section, .bet-input-section {
+                flex-direction: column; /* Xếp các phần tử theo cột */
+                gap: 0.5rem; /* Giảm khoảng cách */
+                padding: 0.8rem;
+            }
+            .deposit-section label, .bet-input-section label {
+                margin-bottom: 0.2rem; /* Thêm khoảng cách nếu cần */
+            }
+            .bet-input-section input {
+                width: 100%; /* Chiếm toàn bộ chiều rộng có sẵn */
+                max-width: 150px; /* Nhưng vẫn giới hạn tối đa */
+            }
+
+            #timerDisplay {
+                font-size: 1.3rem;
+                margin-bottom: 1rem;
+            }
+
+            .bet-group {
+                gap: 0.5rem; /* Giảm khoảng cách giữa các nút cược */
+            }
+
+            .bet-button {
+                padding: 0.8rem 1rem; /* Giảm padding nút cược */
+                font-size: 0.9rem; /* Giảm font size nút cược */
+                min-width: unset; /* Bỏ min-width để flex:1 hoạt động linh hoạt hơn */
+                flex-basis: 48%; /* Cho phép hai cột */
+            }
+            .single-number-bets .bet-button {
+                flex-basis: calc(33.33% - 0.5rem); /* 3 cột cho số đơn */
+                min-width: unset;
+                max-width: unset;
+            }
+
+            #diceResult {
+                font-size: 3rem; /* Giảm kích thước kết quả xí ngầu */
+                margin: 1.2rem 0;
+                min-height: 70px;
+            }
+            .dice-face {
+                width: 70px; /* Giảm kích thước xí ngầu */
+                height: 70px;
+                font-size: 2.5rem; /* Giảm font số trên xí ngầu */
+                border-width: 4px; /* Giảm độ dày viền */
+            }
+
+            #message {
+                font-size: 0.95rem;
+                margin-top: 0.8rem;
+            }
+
+            #playAgainBtn {
+                padding: 0.7rem 1.2rem;
+                font-size: 1rem;
+                margin-top: 1rem;
+            }
+
+            #historySection {
+                padding: 1rem;
+                max-height: 200px; /* Giảm max-height cho lịch sử */
+            }
+            #historySection h2 {
+                font-size: 1.1rem;
+                margin-bottom: 0.8rem;
+            }
+            #betHistory li {
+                font-size: 0.85rem;
+                padding: 0.6rem;
+                flex-direction: column; /* Xếp lịch sử theo cột trên màn hình siêu nhỏ */
+                align-items: flex-start;
+                gap: 0.3rem;
+            }
+            #betHistory li .win-loss {
+                align-self: flex-end; /* Di chuyển thắng thua sang phải */
+            }
+        }
+
+        /* Cho màn hình cực nhỏ (điện thoại cũ, dưới 480px) */
+        @media (max-width: 480px) {
+            :root {
+                --base-font-size: 12px; /* Giảm font cơ sở hơn nữa */
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .container {
+                padding: 0.8rem;
+            }
+
+            .bet-button {
+                flex-basis: 100%; /* Mỗi nút cược chiếm 1 dòng */
+                max-width: 100%;
+            }
+            .bet-button[data-bet-type="tai"],
+            .bet-button[data-bet-type="xiu"] {
+                flex-basis: 100%;
+            }
+            .single-number-bets .bet-button {
+                flex-basis: calc(33.33% - 0.4rem); /* Vẫn cố gắng giữ 3 cột nếu không quá chật */
+            }
+
+            #diceResult {
+                font-size: 2.5rem;
+            }
+            .dice-face {
+                width: 60px;
+                height: 60px;
+                font-size: 2rem;
+            }
+            
+            #betHistory li {
+                font-size: 0.8rem;
+                padding: 0.5rem;
+            }
+        }
+
+        /* Cho màn hình lớn (trên 1200px, máy tính để bàn lớn) */
+        @media (min-width: 1200px) {
+            :root {
+                --base-font-size: 18px; /* Tăng font cơ sở */
+            }
+            .container {
+                max-width: 960px; /* Giới hạn rộng hơn một chút */
+            }
+            h1 {
+                font-size: 2.8rem;
+            }
+            #walletInfo {
+                font-size: 1.3rem;
+            }
+            .bet-button {
+                font-size: 1.2rem;
+                padding: 1.2rem 1.5rem;
+            }
+            #diceResult {
+                font-size: 4.5rem;
+            }
+            .dice-face {
+                width: 100px;
+                height: 100px;
+                font-size: 4rem;
+            }
+            #message {
+                font-size: 1.6rem;
+            }
+            #playAgainBtn {
+                font-size: 1.3rem;
+            }
+            #historySection h2 {
+                font-size: 1.8rem;
+            }
+            #betHistory li {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
